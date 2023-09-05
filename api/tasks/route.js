@@ -2,10 +2,12 @@ import { getResponceMessage } from "@/helper/responceMessage";
 import { Task } from "@/models/task";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import { connectDB } from "@/helper/db";
 
 //get all the task
 export async function GET(request) {
   try {
+    await connectDB();
     const tasks = await Task.find();
     return NextResponse.json(tasks);
   } catch (error) {
@@ -31,6 +33,7 @@ export async function POST(request) {
       userid: data._id,
       status,
     });
+    await connectDB();
     const createdTask = await task.save();
     return NextResponse.json(createdTask, {
       status: 201,
